@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="layout::head">
+
+    </head>
+
+    <body>
+        <header class="mb-5 py-4 text-bg-dark">
+            <div class="container d-flex align-items-center justify-content-between gap-4">
+                <div class="d-flex align-items-center gap-2">
+                    <a th:href="@{/}" class="fs-2 navbar-brand">Spring eCommerce</a>
+                </div>
+            </div>
+        </header>
+        
+        <!-- -->
+        <main class="container">
+            <div class="mb-4 text-center">
+                <h5 class="fs-2 text-center">Iniciar sesión</h5>
+            </div>
+            
+            <div class="m-auto p-4 bg-white rounded-3" style="max-width: 32rem;">
+                <div class="d-flex flex-column gap-2">
+                    <a href="/oauth2/authorization/google" class="btn btn-oauth2">
+                        <div class="d-flex align-items-center justify-content-between gap-2">
+                            <img th:src="@{/icons/google.png}" style="width: 16px; height: 16px;">
+                            <span class="fw-medium">Google</span>
+                            <span></span>
+                        </div>
+                    </a>
+
+                    <a href="/oauth2/authorization/facebook" class="btn btn-oauth2">
+                        <div class="d-flex align-items-center justify-content-between gap-2">
+                            <img th:src="@{/icons/facebook.png}" style="width: 16px; height: 16px;">
+                            <span class="fw-medium">Facebook</span>
+                            <span></span>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="my-4 border-bottom"></div>
+
+                <p class="text-muted text-center">O ingresa tus credenciales</p>
+
+                <p th:if="${param.error}" class="small text-danger">Correo electrónico o contraseña incorrectos.</p>
+
+                <form th:action="@{/login}" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label" for="email">Correo electrónico *</label>
+                        <input class="form-control" type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="password">Contraseña *</label>
+                        <input class="form-control" type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="my-2 btn btn-primary w-100">Iniciar sesión</button>
+                    <a th:href="@{/signup}" class="btn btn-outline-success w-100">Regístrate!</a>
+                </form>
+            </div>
+        </main>
+
+        <!-- Footer y scripts -->
+        <footer th:replace="layout::footer"></footer>
+    </body>
+</html>
+         

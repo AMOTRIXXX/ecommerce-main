@@ -1,0 +1,125 @@
+<!-- -->
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="language" content="Spanish">
+
+    <title>E-commerce - Java Spring</title>
+    <link rel="shortcut icon" th:href="@{/icons/favicon.png}" type="image/x-icon">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" integrity="sha512-siarrzI1u3pCqFG2LEzi87McrBmq6Tp7juVsdmGY1Dr8Saw+ZBAzDzrGwX3vgxX1NkioYNCFOVC0GpDPss10zQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/regular.min.css" integrity="sha512-rOTVxSYNb4+/vo9pLIcNAv9yQVpC8DNcFDWPoc+gTv9SLu5H8W0Dn7QA4ffLHKA0wysdo6C5iqc+2LEO1miAow==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" integrity="sha512-P9pgMgcSNlLb4Z2WAB2sH5KBKGnBfyJnq+bhcfLCFusrRc4XdXrhfDluBl/usq75NF5gTDIMcwI1GaG5gju+Mw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" integrity="sha512-W/zrbCncQnky/EzL+/AYwTtosvrM+YG/V6piQLSe2HuKS6cmbw89kjYkp3tWFn1dkWV7L1ruvJyKbLz73Vlgfg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<!--  -->
+<header th:fragment="header" class="mb-5 py-4 text-bg-dark">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between gap-5">
+            <div class="d-flex align-items-center gap-4 flex-grow-1">
+                <h1 class="mb-0 fs-2 text-nowrap">
+                    <a th:href="@{/}" class="text-decoration-none text-white">Jamb e-Commerce</a>
+                </h1>
+
+                <div class="w-100">
+                    <form th:action="@{/buscar}" method="GET">
+                        <div class="input-group">
+                            <input class="form-control" type="search" name="q" th:value="${param?.q}" placeholder="Buscar productos" required>
+                            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Usuarios logueados -->
+            <div sec:authorize="isAuthenticated()">
+                <nav class="d-flex align-items-center gap-4">
+                    <a th:href="@{/compras}" class="text-decoration-none text-light">Mis compras</a>
+
+                    <a th:href="@{/carrito}" class="btn text-light position-relative">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" th:classappend="${session.carritoSize > 0 ? 'bg-danger' : 'bg-secondary'}">
+                            <span th:text="${session.carritoSize}"></span>
+                        </span>
+                    </a>
+
+                    <div class="btn-group">
+                        <button type="button" class="profile-btn px-3 py-1 dropdown-toggle text-light" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-user fa-sm"></i>
+                        </button>
+                        
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                            <li><h6 class="dropdown-header">Bienvenido, <span th:text="${session.usuarioNombre}"></span></h6></li>
+                            <li><a th:href="@{/perfil}" class="dropdown-item">Perfil</a></li>
+                            <li><a th:href="@{/perfil/domicilios}" class="dropdown-item">Tus domicilios</a></li>
+
+                            <!-- Admin -->
+                            <th:block sec:authorize="hasAuthority('ADMIN')">
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header">Administración</h6></li>
+                                <li><a th:href="@{/admin/productos}" class="dropdown-item"><i class="fa-solid fa-box-open text-success"></i> Productos</a></li>
+                                <li><a th:href="@{/admin/categorias}" class="dropdown-item"><i class="fa-solid fa-tag text-success"></i> Categorías</a></li>
+                                <li><a th:href="@{/admin/usuarios}" class="dropdown-item"><i class="fa-solid fa-users text-success"></i> Usuarios</a></li>
+                                <li><a th:href="@{/admin/ordenes}" class="dropdown-item"><i class="fa-solid fa-basket-shopping text-success"></i> Ordenes</a></li>
+                            </th:block>
+
+                            <!--  -->
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a th:href="@{/logout}" class="dropdown-item">Cerrar sesión <i class="fa-solid fa-right-from-bracket text-secondary"></i></a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Usuarios no logueados -->
+            <div sec:authorize="isAnonymous()">
+                <nav class="d-flex gap-2">
+                    <a th:href="@{/signup}" class="btn btn-success fw-bold">Crear cuenta</a>
+                    <a th:href="@{/login}" class="btn btn-outline-light fw-bold">Iniciar sesión</a>
+                </nav>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-center gap-4 fw-light small">
+            <!-- <a th:href="@{/}" class="btn-unstyled fw-medium text-light"><i class="fa-solid fa-tag"></i> Ofertas</a>
+
+            <div class="border-start"></div> -->
+
+            <div th:each="categoria: ${categorias}" th:if="${categoria.destacado == true}">
+                <a th:href="@{/buscar?categoria={id} (id = ${categoria.id})}" class="btn-unstyled text-light" th:text="${categoria.nombre}"></a>
+            </div>
+
+            <div class="dropdown">
+                <button class="btn-unstyled fw-semibold text-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Categorias </button>
+
+                <ul class="dropdown-menu">
+                    <li th:each="categoria: ${categorias}" th:unless="${categoria.destacado == true}">
+                        <a class="dropdown-item" th:href="@{/buscar?categoria={id} (id = ${categoria.id})}" th:text="${categoria.nombre}"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!--  -->
+<footer th:fragment="footer" class="mt-5 py-4 text-bg-dark">
+    <div class="container">
+        <p class="m-0 text-center">Copyright &COPY; Jamb e-Commerce 2024</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script th:src="@{/app.js}"></script>
+</footer>
